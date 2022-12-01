@@ -35,3 +35,10 @@ class PetDetailView(APIView):
         serializer.save()
 
         return Response(serializer.data)
+    
+    def delete(self, request: Request, pet_id) -> Response:
+        pet = get_object_or_404(Pet, id=pet_id)
+        pet.delete()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+

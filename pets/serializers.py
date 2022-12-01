@@ -6,9 +6,6 @@ from .models import Pet, PetSex
 from groups.models import Group
 from traits.models import Trait
 
-import ipdb
-
-
 class PetSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
     name = serializers.CharField(max_length=50)
@@ -21,6 +18,11 @@ class PetSerializer(serializers.Serializer):
 
     group = GroupSerializer()
     traits = TraitSerializer(many=True)
+
+    traits_count = serializers.SerializerMethodField()
+
+    def get_traits_count(self, obj):
+        return len(obj.traits.all())
 
     def create(self, validated_data: dict):
         group_request = validated_data.pop("group")
