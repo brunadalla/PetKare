@@ -1,9 +1,11 @@
 from django.db import models
 
+
 class PetSex(models.TextChoices):
-    male = "Male"
-    female = "Female"
-    not_Informed = "Not Informed"
+    MALE = "Male"
+    FEMALE = "Female"
+    NOT_INFORMED = "Not Informed"
+
 
 class Pet(models.Model):
     name = models.CharField(max_length=50)
@@ -12,11 +14,11 @@ class Pet(models.Model):
     sex = models.CharField(
         max_length=20,
         choices=PetSex.choices,
-        default=PetSex.not_Informed
-    )
-    
-    group = models.ForeignKey(
-        "groups.Group", on_delete = models.CASCADE, related_name='pets'
+        default=PetSex.NOT_INFORMED,
     )
 
-    traits = models.ManyToManyField("traits.Trait", related_name='pets')
+    group = models.ForeignKey(
+        "groups.Group", on_delete=models.CASCADE, related_name="pets"
+    )
+
+    traits = models.ManyToManyField("traits.Trait", related_name="pets")
