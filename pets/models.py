@@ -22,3 +22,4 @@ class Pet(models.Model):
     )
 
     traits = models.ManyToManyField("traits.Trait", related_name="pets")
+
