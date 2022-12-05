@@ -42,7 +42,7 @@ class PetSerializer(serializers.Serializer):
         for key, value in validated_data.items():
             if key == "group":
                 created_group, _ = Group.objects.get_or_create(**value)
-                instance.group.set(created_group, clear=True)
+                instance.group = created_group
 
             elif key == "traits":
                 traits = list()
