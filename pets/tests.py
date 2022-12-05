@@ -1,4 +1,6 @@
 from pets.models import Pet
+from groups.models import Group
+from traits.models import Trait
 from django.test import TestCase
 
 
@@ -9,12 +11,20 @@ class PetModelTest(TestCase):
             "name": "Minerva",
             "age": 6,
             "weight": 30.0,
-            "sex": "Female",
-            "group": {"scientific_name": "canis familiaris"},
-            "traits": [{"name": "clever"}, {"name": "friendly"}, {"name": "playfull"}],
+            "sex": "Female",    
         }
+        cls.group_data = {
+            "scientific_name": "canis familiaris"
+        }
+        cls.traits = [{"name": "clever"}, {"name": "friendly"}, {"name": "playfull"}]
 
-        cls.pet = Pet.objects.create(**cls.actor_data)
+        cls.group = Group.objects.create(**cls.group_data)
+      
+
+        cls.pet = Pet.objects.create(**cls.pet_data, group=cls.group)
+        for trait in cls.traits:
+            created_trait = Trait.objects.create(**trait)
+            cls.pet.traits.add(created_trait)
 
     def test_name_max_length(self):
         max_length = self.pet._meta.get_field("name").max_length
@@ -25,12 +35,6 @@ class PetModelTest(TestCase):
         max_length = self.pet._meta.get_field("sex").max_length
 
         self.assertEqual(max_length, 20)
-
-    def test_get_traits_count(self):
-        result = self.pet.traits_count
-        expected = len(self.pet_data['traits'])
-
-        self.assertEqual(result, expected)
 
     def test_pet_fields(self):
         self.assertEqual(self.pet.name, self.pet_data["name"])
